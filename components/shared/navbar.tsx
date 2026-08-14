@@ -35,10 +35,9 @@ const navLinks = [
 
 type SiteNavbarProps = {
   isLoggedIn?: boolean
-  showCreateAccount?: boolean
 }
 
-export function Navbar({ isLoggedIn = false, showCreateAccount = false }: SiteNavbarProps) {
+export function Navbar({ isLoggedIn = false, }: SiteNavbarProps) {
   const [isDark, setIsDark] = React.useState(false)
 
   React.useEffect(() => {
