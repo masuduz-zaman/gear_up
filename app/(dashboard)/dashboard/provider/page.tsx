@@ -1,11 +1,11 @@
 import React from 'react';
 
-const Admin = () => {
+const Provider = () => {
     return (
         <div>
-            
+            Provider dashboard
         </div>
     );
 };
 
-export default Admin;
+export default Provider;
