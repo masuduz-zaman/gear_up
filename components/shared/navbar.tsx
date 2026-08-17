@@ -27,7 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 const navLinks = [
-  { href: "#new", label: "Home" },
+  { href: "/", label: "Home" },
   { href: "#Services", label: "Services" },
   { href: "#how it work", label: "how it works" },
   { href: "#about", label: "About" },
@@ -100,11 +100,11 @@ export function Navbar({ isLoggedIn = false, }: SiteNavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-1">
+            <Link href="/login" className="flex items-center gap-1">
               <Button variant="default" size="sm">
                 Log in
               </Button>
-            </div>
+            </Link>
           )}
         </div>
 
