@@ -4,6 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import {
   CircleUserRoundIcon,
+  LogIn,
+  LogOut,
   MenuIcon,
   MoonIcon,
   Search,
@@ -30,6 +32,9 @@ import {
 } from "@/components/ui/sheet"
 import { Metadata, Viewport } from "next"
 import { ThemeToggle } from "../theme-toggle"
+import { logout } from "@/service/logout"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "#Services", label: "Services" },
@@ -70,7 +75,15 @@ export function Navbar({user}: NavbarProps) {
   const [isDark, setIsDark] = React.useState(false)
   const [searchQuery, setSearchQuery]= React.useState(false)
   const isLoggedIn = Boolean(user?.success && user?.data?.profile)
-console.log("USER FROM NAVBAR:", user)
+  const router = useRouter()
+
+  const handleUserMenuAction = async (action: string) => {
+    if (action === "logout") {
+      await logout()
+      toast.success("Logged out successfully")
+      router.push("/login")
+    }
+  }
 
 
 const metadata: Metadata = {
@@ -162,7 +175,7 @@ const viewport: Viewport = {
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger
-                className={"flex justify-center"}
+                className={"flex justify-center cursor-pointer"}
                 aria-label="Open profile menu"
               >
                 <CircleUserRoundIcon data-icon="inline-start" aria-hidden="true" />
@@ -174,16 +187,16 @@ const viewport: Viewport = {
                   <p className="text-xs text-muted-foreground">{user?.data.email}</p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>My orders</DropdownMenuItem>
+                <DropdownMenuItem className={"cursor-pointer"}>Profile</DropdownMenuItem>
+                <DropdownMenuItem className={"cursor-pointer"}>My orders</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Log out</DropdownMenuItem>
+                <DropdownMenuItem className={"cursor-pointer"} onClick={async ()=> await handleUserMenuAction("logout")}>Logout<LogOut /></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login" className="flex items-center gap-1">
+            <Link href="/login" className="flex items-center gap-1 cursor-pointer">
               <Button variant="default" size="sm">
-                Log in
+               <LogIn />Log in
               </Button>
             </Link>
           )}
@@ -231,12 +244,12 @@ const viewport: Viewport = {
                       <DropdownMenuItem>Profile</DropdownMenuItem>
                       <DropdownMenuItem>My orders</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Log out</DropdownMenuItem>
+                      <DropdownMenuItem>Log out<LogOut /></DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    <Button variant="outline" className="justify-center">Log in
+                    <Button variant="outline" className="justify-center"><LogIn />Log in
                     </Button>
                   </div>
                 )}

@@ -18,7 +18,11 @@ export const getMe = async ()=> {
         headers: {
             Cookie: `accessToken=${accessToken}`,
         },
-        cache: "no-store"
+        cache: "force-cache",
+        next:{
+            revalidate:60*60*24,
+            tags: ["my-profile"]
+        }
     })
     const result = await res.json();
     return result;

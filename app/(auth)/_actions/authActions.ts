@@ -3,19 +3,16 @@
 import { LoginState } from "@/lib/type";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import jwt from "jsonwebtoken";
 
 export const loginAction = async (
   prevState: LoginState,
   formData: FormData,
 ) => {
     
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const email = formData.get("email")?.toString();
+  const password = formData.get("password")?.toString();
 
-  console.log("LOGIN FORM DATA:", {
-    email,
-    password,
-  });
 
   if (!email || !password) {
     return {
@@ -47,10 +44,20 @@ export const loginAction = async (
         maxAge: 60 * 60 * 24 * 7,
         sameSite: "lax",
     });
-    redirect("/", "replace")
 
-}
+    const decodedToken =jwt.decode(result.data.accessToken)
 
+    if(decodedToken.role === "CUSTOMER"){
+      redirect("/dashboard/user", "replace")
+    }else if(decodedToken.role === "ADMIN"){
+      redirect("/dashboard/admin", "replace")
+    }else if(decodedToken.role === "PROVIDER"){
+      redirect("/dashboard/provider", "replace")
+    }
+
+    
+
+  }
   return result;
 };
 

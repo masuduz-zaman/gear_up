@@ -26,11 +26,10 @@ export const LoginForm =()=> {
 
     if(state.success){
       toast.success(state.message || "Login successful")
-      // router.push("/dashboard")
     } else {
-      toast.error(state.message || "Login failed")
+      toast.error(state.error || "Login failed")
     }
-  },[state])
+  },[state]) 
   return (
     <form action={action} className={cn("flex justify-center")}>
       <FieldGroup>
@@ -65,12 +64,9 @@ export const LoginForm =()=> {
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>
-          <Button variant="outline" type="button">
-            Login with Google
-          </Button>
           <FieldDescription className="text-center">
             Don&apos;t have an account?{" "}
-            <a href="#" className="underline underline-offset-4">
+            <a href="/signup" className="underline underline-offset-4">
               Sign up
             </a>
           </FieldDescription>
