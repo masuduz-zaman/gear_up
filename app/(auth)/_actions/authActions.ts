@@ -9,10 +9,8 @@ export const loginAction = async (
   prevState: LoginState,
   formData: FormData,
 ) => {
-    
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
-
 
   if (!email || !password) {
     return {
@@ -32,31 +30,40 @@ export const loginAction = async (
   });
   const result = await res.json();
 
-  if(result.success){
+  if (result.success) {
     const cookieStore = await cookies();
-    cookieStore.set("accessToken", result.data.accessToken,{
-        httpOnly: true,
-        maxAge: 60 * 60 * 24,
-        sameSite: "lax",
-    })
-    cookieStore.set("refreshToken", result.data.refreshToken,{
-        httpOnly: true,
-        maxAge: 60 * 60 * 24 * 7,
-        sameSite: "lax",
+    cookieStore.set("accessToken", result.data.accessToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24,
+      sameSite: "lax",
+    });
+    cookieStore.set("refreshToken", result.data.refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: "lax",
     });
 
-    const decodedToken =jwt.decode(result.data.accessToken)
+    const decodedToken = jwt.decode(result.data.accessToken);
 
-    if(decodedToken.role === "CUSTOMER"){
-      redirect("/dashboard/user", "replace")
-    }else if(decodedToken.role === "ADMIN"){
-      redirect("/dashboard/admin", "replace")
-    }else if(decodedToken.role === "PROVIDER"){
-      redirect("/dashboard/provider", "replace")
+    if (
+      decodedToken &&
+      typeof decodedToken !== "string" &&
+      decodedToken.role === "CUSTOMER"
+    ) {
+      redirect("/dashboard/user", "replace");
+    } else if (
+      decodedToken &&
+      typeof decodedToken !== "string" &&
+      decodedToken.role === "ADMIN"
+    ) {
+      redirect("/dashboard/admin", "replace");
+    } else if (
+      decodedToken &&
+      typeof decodedToken !== "string" &&
+      decodedToken.role === "PROVIDER"
+    ) {
+      redirect("/dashboard/provider", "replace");
     }
-
-    
-
   }
   return result;
 };

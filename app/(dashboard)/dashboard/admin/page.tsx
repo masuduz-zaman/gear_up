@@ -1,9 +1,10 @@
+import RentalDashboard from '@/components/shared/admin-dashboard';
 import React from 'react';
 
 const Admin = () => {
     return (
         <div>
-            Admin dashboard
+            <RentalDashboard />
         </div>
     );
 };
