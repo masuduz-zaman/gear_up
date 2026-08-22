@@ -47,7 +47,7 @@ export const loginAction = async (
     if (!res.ok) {
       return {
         success: false,
-        message: result.message || "Invalid email or password",
+        message: result.error || "Invalid email or password",
       };
     }
 
