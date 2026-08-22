@@ -76,22 +76,23 @@ export const loginAction = async (
 
     const decodedToken = jwt.decode(result.data.accessToken);
 
-    if (!decodedToken || typeof decodedToken === "string") {
-      return {
-        success: false,
-        message: "Invalid access token",
-      };
-    }
-
-    if (decodedToken.role === "CUSTOMER") {
+    if (
+      typeof decodedToken === "object" &&
+      decodedToken !== null &&
+      decodedToken.role === "CUSTOMER"
+    ) {
       redirect("/dashboard/user");
-    }
-
-    if (decodedToken.role === "ADMIN") {
+    } else if (
+      typeof decodedToken === "object" &&
+      decodedToken !== null &&
+      decodedToken.role === "ADMIN"
+    ) {
       redirect("/dashboard/admin");
-    }
-
-    if (decodedToken.role === "PROVIDER") {
+    } else if (
+      typeof decodedToken === "object" &&
+      decodedToken !== null &&
+      decodedToken.role === "PROVIDER"
+    ) {
       redirect("/dashboard/provider");
     }
 
