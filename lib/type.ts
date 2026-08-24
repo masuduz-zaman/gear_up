@@ -5,12 +5,28 @@ export type Section = "overview" | "rentals" | "gear" | "users" | "profile";
 export type UserStatus = "Active" | "Pending" | "Suspended";
 
 export type GearItem = {
+  id:string;
+  photo:string;
   name: string;
-  category: string;
+  description:string;
+  brand:string;
+  pricePerDay: string;
   stock: number;
-  rented: number;
-  status: "Available" | "Low stock" | "Maintenance";
-  price: string;
+  isActive: boolean;
+  categoryId: string;
+  providerId: string;
+  createdAt: string;
+  updatedAt: string;
+  provider:{
+    id:string;
+    name:string;
+    email:string;
+    activeStatus:string
+  }
+  _count: {
+    rentalOrders: number;
+    reviews:number;
+  }
 };
 
 export type Rental = {
@@ -30,6 +46,7 @@ export type User = {
   rentals: number;
   joined: string;
   status: UserStatus;
+  role : "ADMIN" | "CUSTOMER" | "PROVIDER"
 };
 
 export type UserProfile = {
@@ -37,6 +54,7 @@ export type UserProfile = {
   email: string;
   role?: string;
   rentalsCount?: number;
+  createdAt: string;
 };
 
 export type LoginState ={

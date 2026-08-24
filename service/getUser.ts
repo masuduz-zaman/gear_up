@@ -29,7 +29,6 @@ export const getUsers = async () => {
     const rawUsers = result.data || result;
 
     type User = {
-      _id?: string;
       id?: string;
       name?: string;
       fullName?: string;
@@ -42,7 +41,7 @@ export const getUsers = async () => {
     };
 
     const formattedUsers = rawUsers.map((user: User) => {
-      const name = user.name || user.fullName || "Unknown User";
+      const name = user.name || "Unknown User";
       
       const initials = name
         .split(" ")
@@ -60,7 +59,7 @@ export const getUsers = async () => {
         : "N/A";
 
       return {
-        id: user._id || user.id,
+        id: user.id || user.id,
         name: name,
         email: user.email,
         initials: initials || "U",
