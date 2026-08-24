@@ -93,12 +93,9 @@ export default function RentalDashboard() {
     async function initDashboard() {
       setLoading(true);
       try {
-        const [meRes, usersRes, gearRes, rentalsRes] = await Promise.allSettled([
-          getMe(),
-          getUsers(),
-          getGearItems(),
-          getRentals(),
-        ]);
+        const [meRes, usersRes, gearRes, rentalsRes] = await Promise.allSettled(
+          [getMe(), getUsers(), getGearItems(""), getRentals()],
+        );
 
         if (meRes.status === "fulfilled" && meRes.value) {
           const val = meRes.value;
@@ -108,21 +105,21 @@ export default function RentalDashboard() {
         if (usersRes.status === "fulfilled" && usersRes.value) {
           const val = usersRes.value;
           setUsers(
-            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : []
+            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : [],
           );
         }
 
         if (gearRes.status === "fulfilled" && gearRes.value) {
           const val = gearRes.value;
           setGear(
-            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : []
+            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : [],
           );
         }
 
         if (rentalsRes.status === "fulfilled" && rentalsRes.value) {
           const val = rentalsRes.value;
           setRentals(
-            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : []
+            Array.isArray(val.data) ? val.data : Array.isArray(val) ? val : [],
           );
         }
       } catch (err) {
@@ -140,9 +137,9 @@ export default function RentalDashboard() {
       users.filter((u) =>
         `${u.name || ""} ${u.email || ""}`
           .toLowerCase()
-          .includes(query.toLowerCase())
+          .includes(query.toLowerCase()),
       ),
-    [users, query]
+    [users, query],
   );
 
   const filteredGear = useMemo(
@@ -150,9 +147,9 @@ export default function RentalDashboard() {
       gear.filter((item) =>
         `${item?.name || ""} ${item?.categoryId || ""}`
           .toLowerCase()
-          .includes(query.toLowerCase())
+          .includes(query.toLowerCase()),
       ),
-    [gear, query]
+    [gear, query],
   );
 
   const filteredRentals = useMemo(
@@ -160,9 +157,9 @@ export default function RentalDashboard() {
       rentals.filter((rental) =>
         `${rental?.id || ""} ${rental?.renter || ""} ${rental?.item || ""}`
           .toLowerCase()
-          .includes(query.toLowerCase())
+          .includes(query.toLowerCase()),
       ),
-    [rentals, query]
+    [rentals, query],
   );
 
   const title = {
@@ -183,7 +180,7 @@ export default function RentalDashboard() {
 
   function updateUserStatus(id: number, status: UserStatus) {
     setUsers((current) =>
-      current.map((u) => (u.id === id ? { ...u, status } : u))
+      current.map((u) => (u.id === id ? { ...u, status } : u)),
     );
     setUserMenu(null);
   }
@@ -200,8 +197,7 @@ export default function RentalDashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-64 flex-col border-r border-[#e4ebe8] bg-card lg:flex">
-        <div className="flex h-16 items-center gap-3 border-b px-6">
-        </div>
+        <div className="flex h-16 items-center gap-3 border-b px-6"></div>
         <nav
           className="flex flex-1 flex-col gap-1 px-4 py-6"
           aria-label="Main navigation"
@@ -306,10 +302,9 @@ export default function RentalDashboard() {
           {loading ? (
             <div className="py-20 text-center text-sm text-[#8a9c95]">
               <Button disabled size="sm">
-        <Spinner data-icon="inline-start" />
-        Loading data...
-      </Button>
-              
+                <Spinner data-icon="inline-start" />
+                Loading data...
+              </Button>
             </div>
           ) : (
             <>
@@ -380,7 +375,7 @@ function Overview({
 }) {
   const activeRentalsCount = useMemo(
     () => rentals.filter((r) => r.status === "Active").length,
-    [rentals]
+    [rentals],
   );
 
   return (
@@ -830,7 +825,7 @@ function UserTable({
                       >
                         {status}
                       </button>
-                    )
+                    ),
                   )}
                 </div>
               )}

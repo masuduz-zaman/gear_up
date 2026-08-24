@@ -201,16 +201,22 @@ export function Navbar({ user }: NavbarProps) {
                   </p>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="cursor-pointer">
-                  <Link
-                    href={
-                      user?.data.role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user"
-                    }
-                  >
-                    {user?.data.role === "ADMIN"
-                      ? "Admin Dashboard"
-                      : "User Dashboard"}
-                  </Link>
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onSelect={() =>
+                    router.push(
+                      user?.data.role === "ADMIN"
+                        ? "/dashboard/admin"
+                        : user?.data.role === "PROVIDER" ? "/dashboard/provider"
+                        : "/dashboard/user",
+                    )
+                  }
+                >
+                  {user?.data.role === "ADMIN"
+                    ? "Admin Dashboard"
+                    : user?.data.role === "PROVIDER"
+                    ? "Provider Dashboard"
+                    :"User Dashboard"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={"cursor-pointer"}
