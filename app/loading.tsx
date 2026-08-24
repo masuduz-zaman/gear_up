@@ -3,8 +3,9 @@ import React from 'react';
 
 const GlobalLoading = () => {
     return (
-        <div className="flex items-center gap-6">
+        <div className="min-h-screen flex flex-col justify-center items-center">
             <Spinner className="size-8" />
+            <p>Loading data...</p>
         </div>
     );
 };

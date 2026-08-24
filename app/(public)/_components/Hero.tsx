@@ -1,110 +1,82 @@
-// "use client";
+"use client";
 
-// import Image from "next/image";
-// import Link from "next/link";
-// import { ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@base-ui/react";
+import { useRouter } from "next/navigation";
 
-// export default function HeroSection() {
-//   return (
-//     <section className="relative overflow-hidden border-b bg-background">
-//       <div className="mx-auto grid min-h-[650px] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-2 lg:px-8">
-        
-//         {/* Left Content */}
-//         <div className="max-w-xl">
-//           <Badge
-//             variant="secondary"
-//             className="mb-6 rounded-full px-4 py-2 text-sm"
-//           >
-//             Premium Gear Rental
-//           </Badge>
+export default function HeroSection() {
+    const router = useRouter();
+  return (
+    <section className="sticky top-0 z-10 min-h-[600px] w-full overflow-hidden border-b">
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-[2px]"
+        style={{
+          backgroundImage: "url('https://img.magnific.com/free-photo/close-up-person-doing-mountain-biking_23-2151850193.jpg?semt=ais_hybrid&w=740&q=80')",
+        }}
+      />
 
-//           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-//             Rent the gear.
-//             <span className="block text-primary">
-//               Enjoy the adventure.
-//             </span>
-//           </h1>
+      <div className="absolute inset-0 bg-black/55" />
 
-//           <p className="mt-6 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-//             From cameras and camping equipment to adventure essentials,
-//             find everything you need without the cost of buying.
-//           </p>
+      <div className="relative z-10 flex min-h-[700px] items-center justify-center px-6 py-16">
+        <div className="mx-auto max-w-3xl text-center text-white">
+          <Badge
+            variant="secondary"
+            className="mb-6 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm text-white backdrop-blur-md hover:bg-white/20"
+          >
+            Premium Gear Rental
+          </Badge>
 
-//           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-//             <Button asChild size="lg" className="rounded-full px-7">
-//               <Link href="/gears">
-//                 Explore Gears
-//                 <ArrowRight className="ml-2 h-4 w-4" />
-//               </Link>
-//             </Button>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-7xl">
+            Rent the gear.
+            <span className="block">
+              Enjoy the adventure.
+            </span>
+          </h1>
 
-//             <Button
-//               asChild
-//               size="lg"
-//               variant="outline"
-//               className="rounded-full px-7"
-//             >
-//               <Link href="/how-it-works">
-//                 How It Works
-//               </Link>
-//             </Button>
-//           </div>
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/80 sm:text-lg">
+            From cameras and camping equipment to adventure essentials,
+            find everything you need without the cost of buying.
+          </p>
 
-//           {/* Small Features */}
-//           <div className="mt-10 flex flex-wrap gap-6">
-//             <div className="flex items-center gap-2">
-//               <div className="rounded-full bg-primary/10 p-2">
-//                 <ShieldCheck className="h-4 w-4 text-primary" />
-//               </div>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button
+              onClick={()=> router.push("/services")}
+              className="inline-flex h-12 items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 text-sm font-semibold text-white backdrop-blur-md transition-all hover:scale-105 hover:bg-white/30"
+            >
+              Explore Gears
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
 
-//               <span className="text-sm text-muted-foreground">
-//                 Verified Equipment
-//               </span>
-//             </div>
+          <div className="mt-12 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-10">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-white/10 p-2.5 backdrop-blur-md">
+                <ShieldCheck className="h-5 w-5 text-primary" />
+              </div>
 
-//             <div className="flex items-center gap-2">
-//               <div className="rounded-full bg-primary/10 p-2">
-//                 <Zap className="h-4 w-4 text-primary" />
-//               </div>
+              <span className="text-sm font-medium text-white/90">
+                Verified Equipment
+              </span>
+            </div>
 
-//               <span className="text-sm text-muted-foreground">
-//                 Easy Booking
-//               </span>
-//             </div>
-//           </div>
-//         </div>
+            {/* Feature 2 */}
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-white/10 p-2.5 backdrop-blur-md">
+                <Zap className="h-5 w-5 text-primary" />
+              </div>
 
-//         {/* Right Image */}
-//         <div className="relative">
-//           <div className="relative overflow-hidden rounded-3xl border bg-muted shadow-2xl">
-//             <Image
-//               src="/images/gear-hero.jpg"
-//               alt="Adventure gear"
-//               width={900}
-//               height={700}
-//               priority
-//               className="h-[420px] w-full object-cover sm:h-[520px]"
-//             />
+              <span className="text-sm font-medium text-white/90">
+                Easy Booking
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-//             {/* Floating Card */}
-//             <div className="absolute bottom-5 left-5 rounded-2xl border bg-background/90 p-4 shadow-lg backdrop-blur-md">
-//               <p className="text-sm font-medium text-foreground">
-//                 Ready for your next adventure?
-//               </p>
-
-//               <p className="mt-1 text-xs text-muted-foreground">
-//                 Quality gear. Flexible rental.
-//               </p>
-//             </div>
-//           </div>
-
-//           {/* Decorative element */}
-//           <div className="absolute -right-10 -top-10 -z-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
+      {/* Bottom Gradient */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent" />
+    </section>
+  );
+}
