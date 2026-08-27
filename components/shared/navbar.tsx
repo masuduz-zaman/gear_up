@@ -8,7 +8,7 @@ import {
   LogOut,
   MenuIcon,
   MoonIcon,
-  Search,
+  // Search,
   ShoppingBagIcon,
   SparklesIcon,
   SunIcon,
@@ -37,9 +37,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "#Services", label: "Services" },
-  { href: "#how it work", label: "how it works" },
-  { href: "#about", label: "About" },
+  { href: "/services", label: "Services" },
+  { href: "/about", label: "About" },
 ];
 
 type IUser = {
@@ -61,7 +60,7 @@ type IUser = {
       createdAt: string;
       updatedAt: string;
     };
-  };
+  };  
 };
 
 type NavbarProps = {
@@ -70,9 +69,26 @@ type NavbarProps = {
 
 export function Navbar({ user }: NavbarProps) {
   const [isDark, setIsDark] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState(false);
   const isLoggedIn = Boolean(user?.success && user?.data?.profile);
   const router = useRouter();
+
+  const handleDashboard = () => {
+  if (!user?.data?.role) return;
+
+  switch (user.data.role) {
+    case "ADMIN":
+      router.push("/dashboard/admin");
+      break;
+
+    case "PROVIDER":
+      router.push("/dashboard/provider");
+      break;
+
+    default:
+      router.push("/dashboard/user");
+      break;
+  }
+};
 
   const handleUserMenuAction = async (action: string) => {
     if (action === "logout") {
@@ -117,9 +133,9 @@ export function Navbar({ user }: NavbarProps) {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/20 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
-          href="#top"
+          href="/"
           className="flex items-center gap-1"
-          aria-label="Atelier home"
+          aria-label="home"
         >
           <span className="font-serif text-lg font-semibold tracking-tight">
             Gear
@@ -143,39 +159,7 @@ export function Navbar({ user }: NavbarProps) {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center">
-          {searchQuery ? (
-            <div className="flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1.5">
-              <Search
-                aria-hidden="true"
-                className="size-4 text-muted-foreground"
-              />
-              <input
-                aria-label="Search"
-                autoFocus
-                className="w-28 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground sm:w-40"
-                placeholder="Search..."
-                type="search"
-              />
-              <button
-                aria-label="Close search"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-                onClick={() => setSearchQuery(false)}
-                type="button"
-              >
-                <X aria-hidden="true" className="size-4" />
-              </button>
-            </div>
-          ) : (
-            <button
-              aria-label="Open search"
-              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              onClick={() => setSearchQuery(true)}
-              type="button"
-            >
-              <Search aria-hidden="true" className="size-5" />
-            </button>
-          )}
+        <div className="hidden items-center md:flex">
           <div className="hidden items-center gap-1 md:flex"></div>
           <ThemeToggle />
           <Button variant="ghost" size="icon" aria-label="Shopping bag">
@@ -203,14 +187,7 @@ export function Navbar({ user }: NavbarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onSelect={() =>
-                    router.push(
-                      user?.data.role === "ADMIN"
-                        ? "/dashboard/admin"
-                        : user?.data.role === "PROVIDER" ? "/dashboard/provider"
-                        : "/dashboard/user",
-                    )
-                  }
+                  onClick={handleDashboard}
                 >
                   {user?.data.role === "ADMIN"
                     ? "Admin Dashboard"
@@ -254,10 +231,12 @@ export function Navbar({ user }: NavbarProps) {
             <SheetContent side="right" className="w-[min(20rem,88vw)]">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
-                  <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <SparklesIcon aria-hidden="true" />
-                  </span>
-                  atelier
+                  <span className="font-serif text-lg font-semibold tracking-tight">
+            Gear
+          </span>
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
+            Up
+          </span>
                 </SheetTitle>
               </SheetHeader>
               <nav
@@ -297,8 +276,16 @@ export function Navbar({ user }: NavbarProps) {
                       />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="min-w-40">
-                      <DropdownMenuItem>Profile</DropdownMenuItem>
-                      <DropdownMenuItem>My orders</DropdownMenuItem>
+                      <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={handleDashboard}
+                >
+                  {user?.data.role === "ADMIN"
+                    ? "Admin Dashboard"
+                    : user?.data.role === "PROVIDER"
+                    ? "Provider Dashboard"
+                    :"User Dashboard"}
+                </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         Log out

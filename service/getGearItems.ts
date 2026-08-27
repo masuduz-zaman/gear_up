@@ -1,19 +1,42 @@
-export async function getGearItems(token: string) {
+"use server";
+
+import { cookies } from "next/headers";
+
+export async function getGearItems() {
   try {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/admin/gear`, {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      console.error("Access token not found");
+      return null;
+    }
+
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    if (!backendUrl) {
+      console.error("NEXT_PUBLIC_BACKEND_URL is not configured");
+      return null;
+    }
+
+    const res = await fetch(`${backendUrl}/api/admin/gear`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
       cache: "no-store",
     });
 
+    const data = await res.json();
+
+    console.log("GEAR STATUS:", res.status);
+    console.log("GEAR RESPONSE:", data);
+
     if (!res.ok) {
-      throw new Error(`Failed to fetch gear items`);
+      throw new Error(`Failed to fetch gear items: ${res.status}`);
     }
 
-    return await res.json();
+    return data;
   } catch (error) {
     console.error("Error fetching gear items:", error);
     return null;

@@ -1,10 +1,10 @@
-import RentalDashboard from '@/components/shared/admin-dashboard';
+import DashboardPage from '@/components/shared/admin/DashboardPage';
 import React from 'react';
 
 const Admin = () => {
     return (
         <div>
-            <RentalDashboard />
+            <DashboardPage/>
         </div>
     );
 };

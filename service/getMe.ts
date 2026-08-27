@@ -1,29 +1,35 @@
-"use server"
+"use server";
 
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 
-export const getMe = async ()=> {
-    const cookieStore = await cookies();
+export const getMe = async () => {
+  const cookieStore = await cookies();
 
-    const accessToken = cookieStore.get("accessToken")?.value;
+  const accessToken = cookieStore.get("accessToken")?.value;
 
-    if(!accessToken){
-        return {
-            success: false,
-            message: "User not logged in!"
-        }
-    }
+  if (!accessToken) {
+    return {
+      success: false,
+      message: "User not logged in!",
+    };
+  }
 
-    const res = await fetch(`${process.env.BACKEND_URL}/api/auth/me`,{
-        headers: {
-            Cookie: `accessToken=${accessToken}`,
-        },
-        cache: "force-cache",
-        next:{
-            revalidate:60*60*24,
-            tags: ["my-profile"]
-        }
-    })
-    const result = await res.json();
-    return result;
-}
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/me`,
+    {
+      headers: {
+        Cookie: `accessToken=${accessToken}`,
+      },
+      cache: "no-store",
+    },
+  );
+
+  if (!res.ok) {
+    return {
+      success: false,
+      message: "Failed to fetch profile",
+    };
+  }
+
+  return res.json();
+};

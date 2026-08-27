@@ -1,11 +1,4 @@
-import React from 'react';
 
-const Provider = () => {
-    return (
-        <div>
-            Provider dashboard
-        </div>
-    );
-};
+import ProviderOverview from "@/components/shared/provider/overview/ProviderOverview";
 
-export default Provider;
+export default function Page() { return <ProviderOverview /> }

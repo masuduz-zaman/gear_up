@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 export const LoginForm = () => {
   const initialState = {
-    success: false,
+    success: true,
     statusCode: 0,
     message: "",
     data: {
@@ -24,7 +24,7 @@ export const LoginForm = () => {
       refreshToken: "",
     },
   };
-
+  
   const loginFormAction = async (
     prevState: typeof initialState,
     formData: FormData,

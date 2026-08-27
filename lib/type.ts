@@ -1,15 +1,15 @@
 
-// lib/type.ts
 
 export type Section = "overview" | "rentals" | "gear" | "users" | "profile";
-export type UserStatus = "Active" | "Pending" | "Suspended";
+export type UserStatus = "ACTIVE" | "SUSPENDED";
+export type UserRole = "ADMIN" | "CUSTOMER" | "PROVIDER";
 
 export type GearItem = {
-  id:string;
-  photo:string;
+  id: string;
+  photo: string;
   name: string;
-  description:string;
-  brand:string;
+  description: string;
+  brand: string;
   pricePerDay: string;
   stock: number;
   isActive: boolean;
@@ -17,36 +17,56 @@ export type GearItem = {
   providerId: string;
   createdAt: string;
   updatedAt: string;
-  provider:{
-    id:string;
-    name:string;
-    email:string;
-    activeStatus:string
-  }
+  provider: {
+    id: string;
+    name: string;
+    email: string;
+    activeStatus: string;
+  };
   _count: {
     rentalOrders: number;
-    reviews:number;
-  }
+    reviews: number;
+  };
 };
 
 export type Rental = {
   id: string;
-  renter: string;
-  item: string;
-  date: string;
-  due: string;
-  status: "Active" | "Due soon" | "Returned";
+  customerId: string;
+  gearItemId: string;
+  startDate: string;
+  endDate: string;
+  totalPrice: number;
+  OrderStatus:"PLACED" | "PENDING" | "CONFIRMED" | "PAID" | "PICKED_UP" | "RETURNED" | "CANCELLED";
+  createdAt: string;
+  updatedAt: string;
+  customer: {
+    id: string;
+    name: string;
+    profile: {
+      profilePhoto: "null";
+    };
+  };
+  gearItem:{
+    id:string;
+    name:string;
+    brand:string;
+    pricePerDay:string;
+    provider:{
+      id:string;
+      name:string;
+    }
+  }
 };
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   initials: string;
   rentals: number;
   joined: string;
-  status: UserStatus;
-  role : "ADMIN" | "CUSTOMER" | "PROVIDER"
+  activeStatus: UserStatus;
+  role: UserRole;
 };
 
 export type UserProfile = {
@@ -57,12 +77,12 @@ export type UserProfile = {
   createdAt: string;
 };
 
-export type LoginState ={
-  success: boolean,
-  statusCode: number,
-  message:string,
-  data:{
-    accessToken:string,
-    refreshToken:string
-  }
-}
+export type LoginState = {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};

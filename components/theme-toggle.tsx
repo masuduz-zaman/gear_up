@@ -17,7 +17,16 @@ function isThemeMode(value: string | undefined): value is ThemeMode {
 }
 
 export function ThemeToggle() {
-  const [mode, setMode] = useState<ThemeMode>('system')
+  const [mode, setMode] = useState<ThemeMode>(() => {
+    if (typeof document === 'undefined') return 'system'
+
+    const savedMode = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith('theme-mode='))
+      ?.split('=')[1]
+
+    return isThemeMode(savedMode) ? savedMode : 'system'
+  })
 
   useEffect(() => {
     const root = document.documentElement
@@ -28,16 +37,6 @@ export function ThemeToggle() {
       root.classList.toggle('dark', isDark)
       root.classList.toggle('light', !isDark)
       root.style.colorScheme = isDark ? 'dark' : 'light'
-    }
-
-    const savedMode = document.cookie
-      .split('; ')
-      .find((cookie) => cookie.startsWith('theme-mode='))
-      ?.split('=')[1]
-
-    if (isThemeMode(savedMode) && savedMode !== mode) {
-      setMode(savedMode)
-      return
     }
 
     applyTheme()

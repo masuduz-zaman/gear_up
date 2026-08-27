@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import HeroSection from "./_components/Hero";
-// import HeroSection from "./_components/Hero";
 
 export default async function Home() {
   return (

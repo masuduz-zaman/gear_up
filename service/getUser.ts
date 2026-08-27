@@ -12,13 +12,16 @@ export const getUsers = async () => {
   }
 
   try {
-    const res = await fetch(`${process.env.BACKEND_URL}/api/admin/users`, {
-      method: "GET",
-      headers: {
-        Cookie: `accessToken=${accessToken}`,
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/users`,
+      {
+        method: "GET",
+        headers: {
+          Cookie: `accessToken=${accessToken}`,
+        },
+        cache: "no-store",
       },
-      cache: "no-store",
-    });
+    );
 
     const result = await res.json();
 
@@ -42,7 +45,7 @@ export const getUsers = async () => {
 
     const formattedUsers = rawUsers.map((user: User) => {
       const name = user.name || "Unknown User";
-      
+
       const initials = name
         .split(" ")
         .map((n: string) => n[0])
@@ -63,9 +66,9 @@ export const getUsers = async () => {
         name: name,
         email: user.email,
         initials: initials || "U",
-        rentals: user.rentalsCount || user.rentals?.length || 0, 
+        rentals: user.rentalsCount || user.rentals?.length || 0,
         joined: joinedDate,
-        status: user.status || (user.isActive ? "Active" : "Pending"),
+        status: user.status,
       };
     });
 
