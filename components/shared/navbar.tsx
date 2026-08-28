@@ -34,7 +34,7 @@ import { Metadata, Viewport } from "next";
 import { ThemeToggle } from "../theme-toggle";
 import { logout } from "@/service/logout";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/gear", label: "Services" },
@@ -71,6 +71,8 @@ export function Navbar({ user }: NavbarProps) {
   const [isDark, setIsDark] = React.useState(false);
   const isLoggedIn = Boolean(user?.success && user?.data?.profile);
   const router = useRouter();
+
+  const pathname = usePathname();
 
   const handleDashboard = () => {
     if (!user?.data?.role) return;
@@ -145,22 +147,36 @@ export function Navbar({ user }: NavbarProps) {
           className="hidden items-center gap-1 md:flex"
           aria-label="Main navigation"
         >
-          {navLinks.map((link, index) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-foreground ${index === 0 ? "text-foreground" : "text-muted-foreground"}`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive =
+              pathname === link.href ||
+              (link.href !== "/" && pathname.startsWith(`${link.href}/`));
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "page" : undefined}
+                className={`rounded-lg px-3 py-2 text-sm transition-colors ${
+                  isActive
+                    ? "bg-primary/10 font-medium text-primary"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
+
         <div className="hidden items-center md:flex">
           <div className="hidden items-center gap-1 md:flex"></div>
           <ThemeToggle />
-          <Button variant="ghost" size="icon" aria-label="Shopping bag">
-            <ShoppingBagIcon aria-hidden="true" />
-          </Button>
+          <Link href="/cart">
+            <Button variant="ghost" size="icon" aria-label="Shopping bag">
+              <ShoppingBagIcon aria-hidden="true" />
+            </Button>
+          </Link>
           {isLoggedIn ? (
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -214,9 +230,11 @@ export function Navbar({ user }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-1 md:hidden">
-          <Button variant="ghost" size="icon" aria-label="Shopping bag">
-            <ShoppingBagIcon aria-hidden="true" />
-          </Button>
+          <Link href="/cart">
+            <Button variant="ghost" size="icon" aria-label="Shopping bag">
+              <ShoppingBagIcon aria-hidden="true" />
+            </Button>
+          </Link>
           <Sheet>
             <SheetTrigger
               render={<Button variant="outline" size="icon" />}
@@ -239,15 +257,26 @@ export function Navbar({ user }: NavbarProps) {
                 className="flex flex-col gap-1 px-4"
                 aria-label="Mobile navigation"
               >
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="rounded-lg px-3 py-3 text-base hover:bg-muted"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive =
+                    pathname === link.href ||
+                    (link.href !== "/" && pathname.startsWith(`${link.href}/`));
+
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      aria-current={isActive ? "page" : undefined}
+                      className={`rounded-lg px-3 py-2 text-sm transition-colors ${
+                        isActive
+                          ? "bg-primary/10 font-medium text-primary"
+                          : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </nav>
               <div className="mt-auto flex flex-col gap-3 border-t border-border p-4">
                 <Button

@@ -190,7 +190,7 @@ export function normalizeGear(value: unknown): Gear[] {
     return [];
   }
 
-  return value.map((item) => {
+  return value.map((item): Gear => {
     const gear = item as Record<string, any>;
 
     const availableQuantity = Number(
@@ -200,31 +200,55 @@ export function normalizeGear(value: unknown): Gear[] {
     );
 
     return {
-      ...gear,
+      id: String(gear.id ?? ""),
+      name: String(gear.name ?? "Unnamed Gear"),
+
+      description:
+        gear.description != null
+          ? String(gear.description)
+          : undefined,
+
       category:
         gear.category?.name ??
         gear.categoryName ??
-        gear.category ??
-        "Uncategorized",
+        (typeof gear.category === "string"
+          ? gear.category
+          : "Uncategorized"),
 
       price: Number(
         gear.price ??
           gear.rentalPrice ??
+          gear.pricePerDay ??
           0,
       ),
 
-      quantity: Number(gear.quantity ?? 0),
+      quantity: Number(
+        gear.quantity ??
+          gear.stock ??
+          0,
+      ),
 
       availableQuantity,
+
+      image:
+        gear.image ??
+        gear.photo ??
+        undefined,
 
       status:
         gear.status ??
         (availableQuantity > 0
           ? "Available"
           : "Unavailable"),
+
+      createdAt:
+        gear.createdAt != null
+          ? String(gear.createdAt)
+          : undefined,
     };
   });
 }
+
 
 export function normalizeOrders(value: unknown): Order[] {
   if (!Array.isArray(value)) {

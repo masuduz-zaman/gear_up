@@ -10,7 +10,7 @@ export type GearItem = {
   name: string;
   description: string;
   brand: string;
-  pricePerDay: string;
+  pricePerDay: number;
   stock: number;
   isActive: boolean;
   categoryId: string;
@@ -86,3 +86,24 @@ export type LoginState = {
     refreshToken: string;
   };
 };
+
+export type Category = {
+  id?: string;
+  name: string;
+  count?: number;
+};
+
+export type GearListResponse =
+  | GearItem[]
+  | {
+      data: GearItem[];
+      total?: number;
+      page?: number;
+      limit?: number;
+    };
+
+export type CategoryResponse =
+  | Category[]
+  | {
+      data: Category[];
+    };

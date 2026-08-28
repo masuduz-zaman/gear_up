@@ -1,6 +1,5 @@
 "use client"
 
-// import { cookies } from "next/headers";
 import type {
   CreateGearPayload,
   Gear,
@@ -18,14 +17,7 @@ async function request<T>(
     throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured");
   }
 
-  // const cookieStore = await cookies();
 
-  // const accessToken =
-  //   cookieStore.get("accessToken")?.value;
-
-  // if (!accessToken) {
-  //   throw new Error("You are not logged in");
-  // }
 
   const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}${url}`, {
     ...options,
