@@ -59,9 +59,6 @@ async function request<T>(
   return (body?.data ?? body) as T;
 }
 
-/* =========================
-   Provider Gear
-========================= */
 
 export function getProviderGear() {
   return request<Gear[]>("/api/provider/gear");
@@ -81,9 +78,7 @@ export function createProviderGear(payload: {
   });
 }
 
-/* =========================
-   Provider Orders
-========================= */
+
 
 export function getProviderOrders() {
   return request<Order[]>("/api/provider/orders");
@@ -102,9 +97,6 @@ export function updateProviderOrder(
   );
 }
 
-/* =========================
-   Helpers
-========================= */
 
 export function formatMoney(amount = 0) {
   return new Intl.NumberFormat("en-US", {
@@ -139,9 +131,6 @@ export function getInitials(name = "Provider") {
     .toUpperCase();
 }
 
-/* =========================
-   Order Helpers
-========================= */
 
 const ORDER_STATUSES: OrderStatus[] = [
   "PLACED",
@@ -181,9 +170,7 @@ export function nextAction(status: OrderStatus) {
   }
 }
 
-/* =========================
-   Normalizers
-========================= */
+
 
 export function normalizeGear(value: unknown): Gear[] {
   if (!Array.isArray(value)) {

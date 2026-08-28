@@ -3,30 +3,32 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  createProviderGear,
-} from "@/lib/provider/api";
+import { createProviderGear } from "@/lib/provider/api";
 
-import type {
-  CreateGearPayload,
-} from "@/lib/provider/types";
+import type { CreateGearPayload } from "@/lib/provider/types";
 
 type FormState = {
+  photo: string;
   name: string;
   description: string;
-  category: string;
-  price: string;
-  quantity: string;
-  image: string;
+  brand: string;
+  pricePerDay: string;
+  stock: string;
+  categoryName: string;
+  categorySlug: string;
+  categoryDescription: string;
 };
 
 const initialForm: FormState = {
+  photo: "",
   name: "",
   description: "",
-  category: "",
-  price: "",
-  quantity: "1",
-  image: "",
+  brand: "",
+  pricePerDay: "",
+  stock: "1",
+  categoryName: "",
+  categorySlug: "",
+  categoryDescription: "",
 };
 
 export default function AddGearForm() {
@@ -35,11 +37,8 @@ export default function AddGearForm() {
   const [form, setForm] =
     useState<FormState>(initialForm);
 
-  const [error, setError] =
-    useState("");
-
-  const [saving, setSaving] =
-    useState(false);
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const handleChange = (
     field: keyof FormState,
@@ -56,16 +55,42 @@ export default function AddGearForm() {
       return "Gear name is required.";
     }
 
-    if (!form.category.trim()) {
-      return "Category is required.";
+    if (!form.photo.trim()) {
+      return "Photo URL is required.";
     }
 
-    if (Number(form.price) <= 0) {
-      return "Price must be greater than 0.";
+    if (!form.description.trim()) {
+      return "Description is required.";
     }
 
-    if (Number(form.quantity) < 1) {
-      return "Quantity must be at least 1.";
+    if (!form.brand.trim()) {
+      return "Brand is required.";
+    }
+
+    if (
+      !form.pricePerDay ||
+      Number(form.pricePerDay) <= 0
+    ) {
+      return "Price per day must be greater than 0.";
+    }
+
+    if (
+      !form.stock ||
+      Number(form.stock) < 1
+    ) {
+      return "Stock must be at least 1.";
+    }
+
+    if (!form.categoryName.trim()) {
+      return "Category name is required.";
+    }
+
+    if (!form.categorySlug.trim()) {
+      return "Category slug is required.";
+    }
+
+    if (!form.categoryDescription.trim()) {
+      return "Category description is required.";
     }
 
     return "";
@@ -76,8 +101,7 @@ export default function AddGearForm() {
   ) => {
     event.preventDefault();
 
-    const validationError =
-      validate();
+    const validationError = validate();
 
     if (validationError) {
       setError(validationError);
@@ -88,29 +112,51 @@ export default function AddGearForm() {
     setError("");
 
     const payload: CreateGearPayload = {
+      photo: form.photo.trim(),
+
       name: form.name.trim(),
-      description:
-        form.description.trim() ||
-        undefined,
-      category: form.category.trim(),
-      price: Number(form.price),
-      quantity: Number(form.quantity),
-      image:
-        form.image.trim() || undefined,
+
+      description: form.description.trim(),
+
+      brand: form.brand.trim(),
+
+      pricePerDay: Number(form.pricePerDay),
+
+      stock: Number(form.stock),
+
+      isActive: true,
+
+      category: {
+        name: form.categoryName.trim(),
+
+        slug: form.categorySlug
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-"),
+
+        description:
+          form.categoryDescription.trim(),
+      },
     };
 
+    console.log("Create Gear Payload:", payload);
+
     try {
-      await createProviderGear(
-        payload,
+      await createProviderGear(payload);
+
+      router.push("/dashboard/provider");
+
+      router.refresh();
+    } catch (error) {
+      console.error(
+        "Create Gear Error:",
+        error,
       );
 
-      router.push(
-        "/dashboard/provider",
-      );
-      router.refresh();
-    } catch {
       setError(
-        "We could not add this gear. Please check your details and try again.",
+        error instanceof Error
+          ? error.message
+          : "We could not add this gear. Please try again.",
       );
     } finally {
       setSaving(false);
@@ -119,29 +165,52 @@ export default function AddGearForm() {
 
   return (
     <div>
-      <h1 className="text-3xl font-semibold tracking-tight">
-        Add New Gear
-      </h1>
+      {/* Header */}
 
-      <p className="mt-2 text-sm text-muted-foreground">
-        Add equipment to your inventory
-        so customers can rent it.
-      </p>
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Add New Gear
+        </h1>
+
+        <p className="mt-2 text-sm text-muted-foreground">
+          Add equipment to your inventory so
+          customers can rent it.
+        </p>
+      </div>
+
+      {/* Form */}
 
       <form
         onSubmit={handleSubmit}
-        className="mt-8 max-w-3xl rounded-2xl border border-border bg-card p-5 md:p-8"
+        className="mt-8 max-w-4xl rounded-2xl border border-border bg-card p-5 md:p-8"
       >
         <div className="grid gap-5 md:grid-cols-2">
+          {/* Gear Name */}
+
           <FormField
             label="Gear name"
             value={form.name}
             onChange={(value) =>
               handleChange("name", value)
             }
-            placeholder="e.g. Alpine touring skis"
+            placeholder="e.g. Camping Tent"
             className="md:col-span-2"
           />
+
+          {/* Photo */}
+
+          <FormField
+            label="Photo URL"
+            value={form.photo}
+            onChange={(value) =>
+              handleChange("photo", value)
+            }
+            placeholder="https://example.com/images/tent.jpg"
+            type="url"
+            className="md:col-span-2"
+          />
+
+          {/* Description */}
 
           <label className="space-y-2 md:col-span-2">
             <span className="text-sm font-medium">
@@ -156,67 +225,107 @@ export default function AddGearForm() {
                   event.target.value,
                 )
               }
-              placeholder="Tell customers about this item"
+              placeholder="Tell customers about this gear"
               rows={4}
-              className="w-full rounded-xl border border-input bg-background p-3 text-sm outline-none focus:ring-4 focus:ring-primary/20"
+              className="w-full rounded-xl border border-input bg-background p-3 text-sm outline-none transition focus:ring-4 focus:ring-primary/20"
             />
           </label>
 
-          <FormField
-            label="Category"
-            value={form.category}
-            onChange={(value) =>
-              handleChange(
-                "category",
-                value,
-              )
-            }
-            placeholder="e.g. Winter sports"
-          />
+          {/* Brand */}
 
           <FormField
-            label="Image URL"
-            value={form.image}
+            label="Brand"
+            value={form.brand}
             onChange={(value) =>
-              handleChange(
-                "image",
-                value,
-              )
+              handleChange("brand", value)
             }
-            placeholder="https://..."
-            type="url"
-            optional
+            placeholder="e.g. Quechua"
           />
 
+          {/* Price */}
+
           <FormField
-            label="Rental price per day"
-            value={form.price}
+            label="Price per day"
+            value={form.pricePerDay}
             onChange={(value) =>
               handleChange(
-                "price",
+                "pricePerDay",
                 value,
               )
             }
-            placeholder="0.00"
+            placeholder="20"
             type="number"
             min="0.01"
             step="0.01"
           />
 
+          {/* Stock */}
+
           <FormField
-            label="Quantity"
-            value={form.quantity}
+            label="Stock"
+            value={form.stock}
             onChange={(value) =>
-              handleChange(
-                "quantity",
-                value,
-              )
+              handleChange("stock", value)
             }
+            placeholder="10"
             type="number"
             min="1"
             step="1"
           />
+
+          {/* Category Name */}
+
+          <FormField
+            label="Category name"
+            value={form.categoryName}
+            onChange={(value) =>
+              handleChange(
+                "categoryName",
+                value,
+              )
+            }
+            placeholder="e.g. Camping"
+          />
+
+          {/* Category Slug */}
+
+          <FormField
+            label="Category slug"
+            value={form.categorySlug}
+            onChange={(value) =>
+              handleChange(
+                "categorySlug",
+                value,
+              )
+            }
+            placeholder="e.g. camping"
+          />
+
+          {/* Category Description */}
+
+          <label className="space-y-2 md:col-span-2">
+            <span className="text-sm font-medium">
+              Category description
+            </span>
+
+            <textarea
+              value={
+                form.categoryDescription
+              }
+              onChange={(event) =>
+                handleChange(
+                  "categoryDescription",
+                  event.target.value,
+                )
+              }
+              placeholder="e.g. Camping gear"
+              rows={3}
+              className="w-full rounded-xl border border-input bg-background p-3 text-sm outline-none transition focus:ring-4 focus:ring-primary/20"
+            />
+          </label>
         </div>
+
+        {/* Error */}
 
         {error && (
           <p
@@ -227,11 +336,14 @@ export default function AddGearForm() {
           </p>
         )}
 
+        {/* Buttons */}
+
         <div className="mt-8 flex flex-col-reverse gap-3 border-t border-border pt-5 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={() => router.back()}
-            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-muted"
+            disabled={saving}
+            className="rounded-xl px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
           >
             Cancel
           </button>
@@ -239,7 +351,7 @@ export default function AddGearForm() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+            className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving
               ? "Adding Gear..."
@@ -251,17 +363,18 @@ export default function AddGearForm() {
   );
 }
 
+/* -------------------------------- */
+/* Form Field                       */
+/* -------------------------------- */
+
 type FormFieldProps = {
   label: string;
   value: string;
-  onChange: (
-    value: string,
-  ) => void;
+  onChange: (value: string) => void;
   placeholder?: string;
   type?: string;
   min?: string;
   step?: string;
-  optional?: boolean;
   className?: string;
 };
 
@@ -273,7 +386,6 @@ function FormField({
   type = "text",
   min,
   step,
-  optional = false,
   className = "",
 }: FormFieldProps) {
   return (
@@ -282,12 +394,6 @@ function FormField({
     >
       <span className="text-sm font-medium">
         {label}
-
-        {optional && (
-          <span className="ml-1 font-normal text-muted-foreground">
-            (optional)
-          </span>
-        )}
       </span>
 
       <input
@@ -299,7 +405,7 @@ function FormField({
         type={type}
         min={min}
         step={step}
-        className="h-11 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none focus:ring-4 focus:ring-primary/20"
+        className="h-11 w-full rounded-xl border border-input bg-background px-3 text-sm outline-none transition focus:ring-4 focus:ring-primary/20"
       />
     </label>
   );

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import HeroSection from "./_components/Hero";
 import { getCategories, getGear } from "@/service/gear_service";
 import { GearMarketplace } from "@/components/shared/gear/all_gear";

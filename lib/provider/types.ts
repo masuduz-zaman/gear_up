@@ -36,10 +36,16 @@ export type Order = {
 
 
 export type CreateGearPayload = {
+  photo: string;
   name: string;
-  description?: string;
-  category: string;
-  price: number;
-  quantity: number;
-  image?: string;
+  description: string;
+  brand: string;
+  pricePerDay: number;
+  stock: number;
+  isActive: boolean;
+  category: {
+    name: string;
+    slug: string;
+    description: string;
+  };
 };

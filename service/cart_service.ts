@@ -1,102 +1,141 @@
-import { GearItem } from "@/lib/type";
+
+export type CartItem = {
+  id: string;
+  name: string;
+  brand: string;
+  photo: string;
+  pricePerDay: number;
+  quantity: number;
+
+  startDate?: string;
+  endDate?: string;
+};
 
 const CART_KEY = "gearup-cart";
 
-export type CartItem = GearItem & {
-  quantity: number;
-};
-
-function isBrowser() {
-  return typeof window !== "undefined";
-}
-
 export function getCart(): CartItem[] {
-  if (!isBrowser()) return [];
+  if (typeof window === "undefined") {
+    return [];
+  }
 
   try {
-    const stored = localStorage.getItem(CART_KEY);
+    const savedCart = localStorage.getItem(CART_KEY);
 
-    if (!stored) return [];
+    if (!savedCart) {
+      return [];
+    }
 
-    const parsed = JSON.parse(stored);
-
-    return Array.isArray(parsed) ? parsed : [];
+    return JSON.parse(savedCart);
   } catch {
     return [];
   }
 }
 
 function saveCart(cart: CartItem[]) {
-  if (!isBrowser()) return;
-
-  localStorage.setItem(
-    CART_KEY,
-    JSON.stringify(cart),
-  );
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
   window.dispatchEvent(
-    new Event("cart-updated"),
+    new Event("cart-updated")
   );
 }
 
-export function addToCart(
-  item: GearItem,
-): CartItem[] {
+export function addToCart(item: CartItem): CartItem[] {
   const cart = getCart();
 
-  const existing = cart.find(
-    (cartItem) => cartItem.id === item.id,
+  const existingItem = cart.find(
+    (cartItem) => cartItem.id === item.id
   );
 
-  if (existing) {
-    existing.quantity += 1;
+  let updatedCart: CartItem[];
+
+  if (existingItem) {
+    updatedCart = cart.map((cartItem) =>
+      cartItem.id === item.id
+        ? {
+            ...cartItem,
+            quantity:
+              cartItem.quantity + item.quantity,
+          }
+        : cartItem
+    );
   } else {
-    cart.push({
-      ...item,
-      quantity: 1,
-    });
+    updatedCart = [...cart, item];
   }
 
-  saveCart(cart);
+  saveCart(updatedCart);
 
-  return cart;
+  return updatedCart;
 }
 
 export function removeFromCart(
-  id: string,
+  id: string
 ): CartItem[] {
-  const cart = getCart().filter(
-    (item) => item.id !== id,
+  const updatedCart = getCart().filter(
+    (item) => item.id !== id
   );
 
-  saveCart(cart);
+  saveCart(updatedCart);
 
-  return cart;
+  return updatedCart;
 }
 
 export function updateCartQuantity(
   id: string,
-  quantity: number,
+  quantity: number
 ): CartItem[] {
-  const cart = getCart();
-
-  const item = cart.find(
-    (cartItem) => cartItem.id === id,
-  );
-
-  if (!item) return cart;
-
   if (quantity <= 0) {
     return removeFromCart(id);
   }
 
-  item.quantity = quantity;
+  const updatedCart = getCart().map((item) =>
+    item.id === id
+      ? {
+          ...item,
+          quantity,
+        }
+      : item
+  );
 
-  saveCart(cart);
+  saveCart(updatedCart);
 
-  return cart;
+  return updatedCart;
 }
 
-export function clearCart() {
+/**
+ * Update rental start and end dates
+ */
+export function updateCartDates(
+  id: string,
+  startDate?: Date,
+  endDate?: Date
+): CartItem[] {
+  const updatedCart = getCart().map((item) => {
+    if (item.id !== id) {
+      return item;
+    }
+
+    return {
+      ...item,
+
+      startDate: startDate
+        ? startDate.toISOString()
+        : item.startDate,
+
+      endDate: endDate
+        ? endDate.toISOString()
+        : item.endDate,
+    };
+  });
+
+  saveCart(updatedCart);
+
+  return updatedCart;
+}
+
+/**
+ * Clear entire cart
+ */
+export function clearCart(): void {
   saveCart([]);
 }
+

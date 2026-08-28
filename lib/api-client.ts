@@ -14,8 +14,10 @@ export async function apiClient<T>(
     `${API_URL}${endpoint}`,
     {
       ...options,
+      credentials: "include",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
         ...(options?.headers ?? {}),
       },
       cache: "no-store",
