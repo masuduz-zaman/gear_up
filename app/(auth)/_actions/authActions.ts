@@ -68,7 +68,6 @@ export const loginAction = async (
     };
   }
 
-  // try/catch-এর বাইরে
   const cookieStore = await cookies();
 
   cookieStore.set("accessToken", result.data.accessToken, {
@@ -89,7 +88,7 @@ export const loginAction = async (
 
   if (typeof decodedToken === "object" && decodedToken !== null) {
     if (decodedToken.role === "CUSTOMER") {
-      redirect("/dashboard/user");
+      redirect("/dashboard/customer");
     }
 
     if (decodedToken.role === "ADMIN") {

@@ -87,18 +87,6 @@ export default function Page() {
       >
         <div className="flex items-center justify-between px-3">
           <button
-            onClick={() => navigate("overview")}
-            className="flex items-center gap-3 text-left"
-            aria-label="Go to overview"
-          >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary font-mono text-sm font-bold text-primary-foreground">
-              G/
-            </span>
-            <span className="font-mono text-sm font-bold tracking-[0.18em] text-sidebar-foreground">
-              GEARLOOP
-            </span>
-          </button>
-          <button
             onClick={() => setMobileOpen(false)}
             className="rounded-md p-2 text-muted-foreground lg:hidden"
             aria-label="Close navigation"
@@ -122,14 +110,6 @@ export default function Page() {
           ))}
         </nav>
         <div className="mt-auto space-y-1">
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent">
-            <CircleHelp size={18} />
-            Help center
-          </button>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent">
-            <Settings size={18} />
-            Settings
-          </button>
           <div className="mt-4 flex items-center gap-3 border-t border-sidebar-border px-3 pt-5">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent font-mono text-xs font-bold text-accent-foreground">
               JM
@@ -173,7 +153,6 @@ export default function Page() {
               className="relative text-muted-foreground"
               aria-label="Notifications"
             >
-              <Bell size={19} />
               <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-highlight" />
             </button>
             <div className="h-8 w-px bg-border" />
@@ -498,25 +477,6 @@ function Profile() {
           <button className="mt-6 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground">
             Save changes
           </button>
-        </div>
-        <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-          <h2 className="font-semibold">Notifications</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Choose how Gearloop keeps you in the loop.
-          </p>
-          <label className="mt-6 flex items-center justify-between border-t border-border pt-5 text-sm">
-            <span>
-              <span className="block font-medium">Rental reminders</span>
-              <span className="text-xs text-muted-foreground">
-                Pickup and return notifications
-              </span>
-            </span>
-            <input
-              type="checkbox"
-              defaultChecked
-              className="h-4 w-4 accent-primary"
-            />
-          </label>
         </div>
       </div>
     </>

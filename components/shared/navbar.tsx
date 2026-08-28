@@ -37,7 +37,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/services", label: "Services" },
+  { href: "/gear", label: "Services" },
   { href: "/about", label: "About" },
 ];
 
@@ -60,7 +60,7 @@ type IUser = {
       createdAt: string;
       updatedAt: string;
     };
-  };  
+  };
 };
 
 type NavbarProps = {
@@ -73,22 +73,22 @@ export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
 
   const handleDashboard = () => {
-  if (!user?.data?.role) return;
+    if (!user?.data?.role) return;
 
-  switch (user.data.role) {
-    case "ADMIN":
-      router.push("/dashboard/admin");
-      break;
+    switch (user.data.role) {
+      case "ADMIN":
+        router.push("/dashboard/admin");
+        break;
 
-    case "PROVIDER":
-      router.push("/dashboard/provider");
-      break;
+      case "PROVIDER":
+        router.push("/dashboard/provider");
+        break;
 
-    default:
-      router.push("/dashboard/user");
-      break;
-  }
-};
+      default:
+        router.push("/dashboard/customer");
+        break;
+    }
+  };
 
   const handleUserMenuAction = async (action: string) => {
     if (action === "logout") {
@@ -132,11 +132,7 @@ export function Navbar({ user }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/20 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-1"
-          aria-label="home"
-        >
+        <Link href="/" className="flex items-center gap-1" aria-label="home">
           <span className="font-serif text-lg font-semibold tracking-tight">
             Gear
           </span>
@@ -192,8 +188,8 @@ export function Navbar({ user }: NavbarProps) {
                   {user?.data.role === "ADMIN"
                     ? "Admin Dashboard"
                     : user?.data.role === "PROVIDER"
-                    ? "Provider Dashboard"
-                    :"User Dashboard"}
+                      ? "Provider Dashboard"
+                      : "Dashboard"}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className={"cursor-pointer"}
@@ -232,11 +228,11 @@ export function Navbar({ user }: NavbarProps) {
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <span className="font-serif text-lg font-semibold tracking-tight">
-            Gear
-          </span>
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
-            Up
-          </span>
+                    Gear
+                  </span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold">
+                    Up
+                  </span>
                 </SheetTitle>
               </SheetHeader>
               <nav
@@ -277,15 +273,15 @@ export function Navbar({ user }: NavbarProps) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="min-w-40">
                       <DropdownMenuItem
-                  className="cursor-pointer"
-                  onClick={handleDashboard}
-                >
-                  {user?.data.role === "ADMIN"
-                    ? "Admin Dashboard"
-                    : user?.data.role === "PROVIDER"
-                    ? "Provider Dashboard"
-                    :"User Dashboard"}
-                </DropdownMenuItem>
+                        className="cursor-pointer"
+                        onClick={handleDashboard}
+                      >
+                        {user?.data.role === "ADMIN"
+                          ? "Admin Dashboard"
+                          : user?.data.role === "PROVIDER"
+                            ? "Provider Dashboard"
+                            : "User Dashboard"}
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         Log out
