@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-
 import { DashboardHeader } from "./DashboardHeader";
 import { StatCard } from "./StatCard";
 import { RentalCard } from "./RentalCard";
@@ -23,18 +22,13 @@ import { Rental } from "@/lib/customer";
 import { getMyRentals } from "@/service/rental.service";
 
 export function CustomerDashboard() {
-  const [menuOpen, setMenuOpen] =
-    useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const [rentals, setRentals] = useState<Rental[]>(
-    []
-  );
+  const [rentals, setRentals] = useState<Rental[]>([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [error, setError] =
-    useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const loadRentals = async () => {
     try {
@@ -43,12 +37,10 @@ export function CustomerDashboard() {
 
       const data = await getMyRentals();
 
-      setRentals(data);
+      setRentals(data as unknown as Rental[]);
     } catch (error) {
       setError(
-        error instanceof Error
-          ? error.message
-          : "Failed to load rentals"
+        error instanceof Error ? error.message : "Failed to load rentals",
       );
     } finally {
       setLoading(false);
@@ -61,43 +53,33 @@ export function CustomerDashboard() {
 
   const activeRentals = rentals.filter(
     (rental) =>
-      rental.orderStatus === "PAID" ||
-      rental.orderStatus === "PICKED_UP"
+      rental.orderStatus === "PAID" || rental.orderStatus === "PICKED_UP",
   );
 
   const upcomingRentals = rentals.filter(
     (rental) =>
       rental.orderStatus === "PLACED" ||
       rental.orderStatus === "PENDING" ||
-      rental.orderStatus === "CONFIRMED"
+      rental.orderStatus === "CONFIRMED",
   );
 
   const totalSpent = rentals.reduce(
-    (total, rental) =>
-      total + Number(rental.totalPrice || 0),
-    0
+    (total, rental) => total + Number(rental.totalPrice || 0),
+    0,
   );
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
-      <DashboardSidebar
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-      />
+      <DashboardSidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <div className="lg:pl-64">
-        <DashboardHeader
-          onMenu={() => setMenuOpen(true)}
-        />
+        <DashboardHeader onMenu={() => setMenuOpen(true)} />
 
         <main className="mx-auto max-w-[1400px] px-5 py-8 md:px-8 lg:py-10">
           {loading ? (
             <LoadingSkeleton />
           ) : error ? (
-            <RentalError
-              message={error}
-              onRetry={loadRentals}
-            />
+            <RentalError message={error} onRetry={loadRentals} />
           ) : (
             <>
               <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -111,8 +93,7 @@ export function CustomerDashboard() {
                   </h1>
 
                   <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-                    Here&apos;s an overview of your
-                    rentals and recent activity.
+                    Here&apos;s an overview of your rentals and recent activity.
                   </p>
                 </div>
 
@@ -128,9 +109,7 @@ export function CustomerDashboard() {
               <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <StatCard
                   label="Active rentals"
-                  value={String(
-                    activeRentals.length
-                  )}
+                  value={String(activeRentals.length)}
                   icon={PackageCheck}
                   note="Currently on rent"
                   accent="bg-primary/10 text-primary"
@@ -138,9 +117,7 @@ export function CustomerDashboard() {
 
                 <StatCard
                   label="Upcoming rentals"
-                  value={String(
-                    upcomingRentals.length
-                  )}
+                  value={String(upcomingRentals.length)}
                   icon={Clock3}
                   note="Upcoming orders"
                   accent="bg-amber-100 text-amber-800"
@@ -181,10 +158,7 @@ export function CustomerDashboard() {
                     activeRentals
                       .slice(0, 2)
                       .map((rental) => (
-                        <RentalCard
-                          rental={rental}
-                          key={rental.id}
-                        />
+                        <RentalCard rental={rental} key={rental.id} />
                       ))
                   )}
                 </div>
@@ -196,13 +170,10 @@ export function CustomerDashboard() {
                 </span>
 
                 <div className="flex-1">
-                  <h2 className="font-semibold">
-                    Looking for something?
-                  </h2>
+                  <h2 className="font-semibold">Looking for something?</h2>
 
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Explore available equipment for
-                    your next project.
+                    Explore available equipment for your next project.
                   </p>
                 </div>
 
@@ -215,9 +186,7 @@ export function CustomerDashboard() {
               </div>
 
               {rentals.length > 0 && (
-                <RecentRentals
-                  rentals={rentals.slice(0, 5)}
-                />
+                <RecentRentals rentals={rentals.slice(0, 5)} />
               )}
             </>
           )}

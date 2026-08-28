@@ -22,7 +22,7 @@ export function GearCard({
     item._count?.reviews ?? 0;
 
   const handleCart = () => {
-    addToCart(item);
+    addToCart({ ...item, quantity: 1 });
     onToggleLike(item.id);
   };
 

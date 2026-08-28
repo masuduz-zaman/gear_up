@@ -13,26 +13,20 @@ interface GearDetailProps {
   item: GearItem;
 }
 
-export function GearDetail({
-  item,
-}: GearDetailProps) {
-  const reviewCount =
-    item._count?.reviews ?? 0;
+export function GearDetail({ item }: GearDetailProps) {
+  const reviewCount = item._count?.reviews ?? 0;
 
   const [added, setAdded] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(item);
+    addToCart({ ...item, quantity: 1 });
     setAdded(true);
   };
 
   return (
     <main className="min-h-screen bg-background">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-        <Link
-          href="/gear"
-          className="text-sm text-primary hover:underline"
-        >
+        <Link href="/gear" className="text-sm text-primary hover:underline">
           ← Back to gear
         </Link>
 
@@ -46,9 +40,7 @@ export function GearDetail({
           </div>
 
           <div className="flex flex-col justify-center gap-5">
-            <Badge className="w-fit">
-              {item.brand}
-            </Badge>
+            <Badge className="w-fit">{item.brand}</Badge>
 
             <h1 className="text-4xl font-semibold tracking-tight text-primary">
               {item.name}
@@ -63,16 +55,11 @@ export function GearDetail({
                 ${item.pricePerDay}
               </span>
 
-              <span className="text-muted-foreground">
-                {" "}
-                / day
-              </span>
+              <span className="text-muted-foreground"> / day</span>
             </div>
 
             <div className="text-sm text-muted-foreground">
-              {reviewCount > 0
-                ? `${reviewCount} reviews`
-                : "No reviews yet"}
+              {reviewCount > 0 ? `${reviewCount} reviews` : "No reviews yet"}
             </div>
 
             <div className="text-sm text-muted-foreground">
@@ -85,10 +72,7 @@ export function GearDetail({
               <Button
                 size="lg"
                 type="button"
-                disabled={
-                  !item.isActive ||
-                  item.stock <= 0
-                }
+                disabled={!item.isActive || item.stock <= 0}
                 onClick={handleAddToCart}
                 className="flex-1"
               >
@@ -107,10 +91,7 @@ export function GearDetail({
 
               {added && (
                 <Link href="/cart">
-                  <Button
-                    size="lg"
-                    variant="outline"
-                  >
+                  <Button size="lg" variant="outline">
                     View Cart
                   </Button>
                 </Link>

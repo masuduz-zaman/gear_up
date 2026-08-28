@@ -28,7 +28,7 @@ export function CustomerRentalsPage() {
 
       const data = await getMyRentals();
 
-      setRentals(data);
+      setRentals(data as unknown as Rental[]);
     } catch (error) {
       setError(
         error instanceof Error

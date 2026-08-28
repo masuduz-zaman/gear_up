@@ -11,8 +11,9 @@ import {
 
 
 import { StatusBadge } from "./StatusBadge";
-import { Rental } from "@/lib/customer";
 import { getRentalById } from "@/service/rental.service";
+
+type Rental = Awaited<ReturnType<typeof getRentalById>>;
 
 type Props = {
   rentalId: string;
@@ -129,7 +130,7 @@ export function RentalDetails({
         </div>
 
         <StatusBadge
-          status={rental.orderStatus}
+          status={rental.OrderStatus}
         />
       </div>
 
